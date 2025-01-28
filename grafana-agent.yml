@@ -1,0 +1,38 @@
+metrics:
+  global:
+    scrape_interval: 5s
+    external_labels:
+      cluster: 'cc-demo-rpc'
+      chain: 'N/A'
+  configs:
+    - name: default
+      remote_write:
+        - url: "http://prometheus-destination:9090/api/v1/write"
+      scrape_configs:
+        - job_name: "from-source"
+          static_configs:
+            - targets: ["dummy-metrics:8000"]
+          metric_relabel_configs:
+            - source_labels: [__name__]
+              regex: acme_value2|acme_value
+              action: keep
+            - source_labels: [persistentvolumeclaim]
+              regex: ^(node-storage-)?cc3-testnet$
+              target_label: chain
+              replacement: creditcoin3-testnet
+              action: replace
+            - source_labels: [pod]
+              regex: ^cc3-testnet$
+              target_label: chain
+              replacement: creditcoin3-testnet
+              action: replace
+            - source_labels: [persistentvolumeclaim]
+              regex: ^(node-storage-)?cc3-mainnet$
+              target_label: chain
+              replacement: creditcoin3
+              action: replace
+            - source_labels: [pod]
+              regex: ^cc3-mainnet$
+              target_label: chain
+              replacement: creditcoin3
+              action: replace

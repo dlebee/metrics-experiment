@@ -1,0 +1,9 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus Destination
+    type: prometheus
+    access: proxy
+    url: http://prometheus-destination:9090
+    isDefault: true
+    editable: true
