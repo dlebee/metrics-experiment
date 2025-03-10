@@ -12,11 +12,11 @@ services:
     ports:
       - "9091:9090"
 
-  dummy-metrics:
-    container_name: dummy-metrics
-    build: .
-    ports:
-      - "8000:8000"
+  # dummy-metrics:
+  #   container_name: dummy-metrics
+  #   build: .
+  #   ports:
+  #     - "8000:8000"
 
   grafana-agent:
     image: grafana/agent:latest
