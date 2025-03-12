@@ -1,4 +1,3 @@
-version: "3.9"
 services:
 
   prometheus-destination:
@@ -12,23 +11,32 @@ services:
     ports:
       - "9091:9090"
 
-  # dummy-metrics:
-  #   container_name: dummy-metrics
-  #   build: .
-  #   ports:
-  #     - "8000:8000"
-
-  grafana-agent:
-    image: grafana/agent:latest
-    container_name: grafana-agent
+  grafana-alloy: 
+    image: grafana/alloy:latest
+    container_name: grafana-alloy
     volumes:
+      - ./alloy-data:/var/lib/alloy/data
+      - ./config.alloy:/etc/alloy/config.alloy
       - ./grafana-agent.yml:/etc/agent/agent.yml
     command:
-      - --config.file=/etc/agent/agent.yml
-      - --metrics.wal-directory=/etc/agent/data
-      - -server.http.address=0.0.0.0:12345
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
     ports:
-      - "12345:12345" # Update with Grafana Agent's desired endpoint
+      - "12345:12345"
+
+  #grafana-agent:
+  #  image: grafana/agent:latest
+  #  container_name: grafana-agent
+  #  volumes:
+  #    - ./grafana-agent.yml:/etc/agent/agent.yml
+  #  command:
+  #    - --config.file=/etc/agent/agent.yml
+  #    - --metrics.wal-directory=/etc/agent/data
+  #    - -server.http.address=0.0.0.0:12345
+  #  ports:
+  #    - "12345:12345" # Update with Grafana Agent's desired endpoint
 
   grafana:
     image: grafana/grafana:latest
