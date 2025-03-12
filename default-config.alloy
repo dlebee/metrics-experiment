@@ -1,0 +1,26 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+livedebugging {
+  enabled = true
+}
+
+prometheus.scrape "metrics_default_from_source" {
+  	targets = [{
+		__address__ = "host.docker.internal:8000",
+	}]
+	forward_to      = [prometheus.remote_write.metrics_default.receiver]
+	job_name        = "from-source"
+	scrape_interval = "5s"
+	scrape_timeout  = "5s"
+}
+
+prometheus.remote_write "metrics_default" {
+	endpoint {
+		url  = "http://prometheus-destination:9090/api/v1/write"
+		queue_config { }
+		metadata_config { }
+	}
+}
